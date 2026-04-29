@@ -1,0 +1,126 @@
+.sketch-panel {
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  border-radius: 18px;
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.sketch-panel--soft {
+  background: var(--paper-muted);
+}
+
+.sketch-card {
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  border-radius: 16px;
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.sketch-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.7rem;
+  box-shadow: 3px 3px 0 var(--ink);
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.sketch-button:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.sketch-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.sketch-button--ghost {
+  background: var(--paper-muted);
+}
+
+.sketch-input {
+  width: 100%;
+  border: 2px solid var(--ink);
+  background: var(--paper-muted);
+  padding: 0.55rem 0.75rem;
+  border-radius: 12px;
+  box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.08);
+  font-size: 0.95rem;
+}
+
+.sketch-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.15), inset 2px 2px 0 rgba(0, 0, 0, 0.08);
+}
+
+.sketch-link {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.sketch-tag {
+  border: 2px solid var(--ink);
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.65rem;
+}
+
+.sketch-badge {
+  border: 2px solid var(--ink);
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  background: var(--paper-muted);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4em;
+}
+
+.sketch-stamp {
+  border: 2px dashed var(--ink);
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.65rem;
+}
+
+.sketch-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.sketch-table th,
+.sketch-table td {
+  border: 2px solid var(--ink);
+  padding: 0.75rem;
+  background: var(--paper);
+}
+
+.sketch-table th {
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.7rem;
+}
+
+.ink-divider {
+  height: 2px;
+  background: var(--ink);
+  opacity: 0.4;
+}
+
+.note-box {
+  border-left: 3px solid var(--ink);
+  padding-left: 0.75rem;
+}
