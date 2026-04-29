@@ -4,9 +4,7 @@
 1. Copy `.env.example` to `.env` and update values.
 2. Install dependencies:
    - `npm install`
-3. Seed the database:
-   - `npm run seed`
-4. Start the API:
+3. Start the API:
    - `npm run dev`
 
 ## Endpoints

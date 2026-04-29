@@ -13,6 +13,20 @@ const COURSE_OPTIONS = [
   'Civil Engineering'
 ];
 
+const SORT_OPTIONS = [
+  { value: 'rating_desc', label: 'Rating: High to low' },
+  { value: 'rating_asc', label: 'Rating: Low to high' },
+  { value: 'fees_asc', label: 'Fees: Low to high' },
+  { value: 'fees_desc', label: 'Fees: High to low' },
+  { value: 'name_asc', label: 'Name: A to Z' },
+  { value: 'name_desc', label: 'Name: Z to A' }
+];
+
+const SORT_LABELS = SORT_OPTIONS.reduce((acc, option) => {
+  acc[option.value] = option.label;
+  return acc;
+}, {});
+
 const DEFAULT_FILTERS = {
   search: '',
   location: '',
@@ -23,6 +37,14 @@ const DEFAULT_FILTERS = {
 };
 
 const LIMIT = 6;
+
+const isDefaultFilters = (value) =>
+  value.search === '' &&
+  value.location === '' &&
+  value.course === '' &&
+  value.minFees === '' &&
+  value.maxFees === '' &&
+  value.sort === DEFAULT_FILTERS.sort;
 
 const Home = ({
   compareIds,
@@ -67,6 +89,23 @@ const Home = ({
   }, [applied, page]);
 
   const totalPages = meta.totalPages || 1;
+  const hasActiveFilters = !isDefaultFilters(applied);
+  const canReset = hasActiveFilters || !isDefaultFilters(filters);
+  const totalCount = meta.total || 0;
+  const visibleCount = colleges.length;
+
+  const filterTags = [];
+  if (applied.search) filterTags.push(`Search: ${applied.search}`);
+  if (applied.location) filterTags.push(`Location: ${applied.location}`);
+  if (applied.course) filterTags.push(`Course: ${applied.course}`);
+  if (applied.minFees || applied.maxFees) {
+    const minLabel = applied.minFees ? applied.minFees : '0';
+    const maxLabel = applied.maxFees ? applied.maxFees : 'No max';
+    filterTags.push(`Fees: ${minLabel} - ${maxLabel}`);
+  }
+  if (applied.sort && applied.sort !== DEFAULT_FILTERS.sort) {
+    filterTags.push(`Sort: ${SORT_LABELS[applied.sort] || applied.sort}`);
+  }
 
   const applyFilters = (event) => {
     event.preventDefault();
@@ -132,8 +171,11 @@ const Home = ({
       )}
 
       <section className="sketch-panel p-6">
-        <form className="grid gap-4 md:grid-cols-2 lg:grid-cols-6" onSubmit={applyFilters}>
-          <div className="lg:col-span-2">
+        <form
+          className="grid gap-4 md:grid-cols-2 lg:grid-cols-12"
+          onSubmit={applyFilters}
+        >
+          <div className="lg:col-span-4">
             <label className="text-xs uppercase tracking-[0.3em]">Search</label>
             <input
               className="sketch-input mt-2"
@@ -144,7 +186,7 @@ const Home = ({
               }
             />
           </div>
-          <div>
+          <div className="lg:col-span-2">
             <label className="text-xs uppercase tracking-[0.3em]">Location</label>
             <select
               className="sketch-input mt-2"
@@ -161,7 +203,7 @@ const Home = ({
               ))}
             </select>
           </div>
-          <div>
+          <div className="lg:col-span-2">
             <label className="text-xs uppercase tracking-[0.3em]">Course</label>
             <select
               className="sketch-input mt-2"
@@ -178,7 +220,23 @@ const Home = ({
               ))}
             </select>
           </div>
-          <div>
+          <div className="lg:col-span-2">
+            <label className="text-xs uppercase tracking-[0.3em]">Sort</label>
+            <select
+              className="sketch-input mt-2"
+              value={filters.sort}
+              onChange={(event) =>
+                setFilters((prev) => ({ ...prev, sort: event.target.value }))
+              }
+            >
+              {SORT_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="lg:col-span-1">
             <label className="text-xs uppercase tracking-[0.3em]">Min fees</label>
             <input
               className="sketch-input mt-2"
@@ -191,7 +249,7 @@ const Home = ({
               }
             />
           </div>
-          <div>
+          <div className="lg:col-span-1">
             <label className="text-xs uppercase tracking-[0.3em]">Max fees</label>
             <input
               className="sketch-input mt-2"
@@ -204,14 +262,15 @@ const Home = ({
               }
             />
           </div>
-          <div className="flex flex-col justify-end gap-2">
-            <button className="sketch-button" type="submit">
-              Apply
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-end lg:col-span-12">
+            <button className="sketch-button w-full sm:w-auto" type="submit">
+              Apply filters
             </button>
             <button
-              className="sketch-button sketch-button--ghost"
+              className="sketch-button sketch-button--ghost w-full sm:w-auto"
               type="button"
               onClick={resetFilters}
+              disabled={!canReset}
             >
               Reset
             </button>
@@ -219,8 +278,30 @@ const Home = ({
         </form>
       </section>
 
-      <section className="flex items-center justify-between text-xs uppercase tracking-[0.3em]">
-        <span>{meta.total || 0} colleges</span>
+      {filterTags.length > 0 && (
+        <section className="sketch-panel sketch-panel--soft p-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.2em]">
+              <span className="sketch-stamp">Active filters</span>
+              {filterTags.map((tag) => (
+                <span key={tag} className="sketch-tag">
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="sketch-button sketch-button--ghost"
+              onClick={resetFilters}
+            >
+              Clear filters
+            </button>
+          </div>
+        </section>
+      )}
+
+      <section className="flex flex-col gap-2 text-xs uppercase tracking-[0.3em] sm:flex-row sm:items-center sm:justify-between">
+        <span>Showing {visibleCount} of {totalCount} colleges</span>
         <span>
           Page {page} of {totalPages}
         </span>
@@ -238,8 +319,28 @@ const Home = ({
         </section>
       )}
 
-      {!loading && !error && (
-        <section className="grid gap-6 md:grid-cols-2">
+      {!loading && !error && colleges.length === 0 && (
+        <section className="sketch-panel p-6">
+          <p className="text-sm uppercase tracking-[0.2em]">
+            No colleges match those filters.
+          </p>
+          <p className="mt-2 text-sm opacity-70">
+            Try clearing fees or course, or broaden the search text.
+          </p>
+          <div className="mt-4">
+            <button
+              type="button"
+              className="sketch-button sketch-button--ghost"
+              onClick={resetFilters}
+            >
+              Clear filters
+            </button>
+          </div>
+        </section>
+      )}
+
+      {!loading && !error && colleges.length > 0 && (
+        <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {colleges.map((college) => (
             <SketchCard
               key={college._id}
